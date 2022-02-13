@@ -15,14 +15,12 @@ int main()
     for (int i = 0; i < n; i++) {
         if (max < a[i]) {
             max = a[i];
-            cout << "Max update!" << endl;
         }
     }
 #pragma omp parallel for
     for (int i = 0; i < n; i++) {
         if (min > a[i]) {
             min = a[i];
-            cout << "Min update!" << endl;
         }
     }
     cout << max << endl;
