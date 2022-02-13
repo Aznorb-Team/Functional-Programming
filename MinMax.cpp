@@ -16,9 +16,6 @@ int main()
         if (max < a[i]) {
             max = a[i];
         }
-    }
-#pragma omp parallel for
-    for (int i = 0; i < n; i++) {
         if (min > a[i]) {
             min = a[i];
         }
