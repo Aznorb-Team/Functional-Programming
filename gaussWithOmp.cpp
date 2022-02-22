@@ -28,7 +28,7 @@ double* gauss(double** a, double* y, int n)
         // Поиск строки с максимальным a[i][k]
         max = abs(a[k][k]);
         index = k;
-        #pragma omp parallel for
+#pragma omp parallel for
         for (int i = k + 1; i < n; i++)
         {
             if (abs(a[i][k]) > max)
@@ -45,7 +45,7 @@ double* gauss(double** a, double* y, int n)
             cout << index << " матрицы A" << endl;
             return 0;
         }
-        #pragma omp parallel for
+#pragma omp parallel for
         for (int j = 0; j < n; j++)
         {
             double temp = a[k][j];
@@ -86,7 +86,6 @@ int main()
     int n;
     system("chcp 1251");
     system("cls");
-    cout << "Введите количество уравнений: ";
     cin >> n;
     a = new double* [n];
     y = new double[n];
@@ -95,13 +94,13 @@ int main()
         a[i] = new double[n];
         for (int j = 0; j < n; j++)
         {
-            cout << "a[" << i << "][" << j << "]= ";
+            //cout << "a[" << i << "][" << j << "]= ";
             cin >> a[i][j];
         }
     }
     for (int i = 0; i < n; i++)
     {
-        cout << "y[" << i << "]= ";
+        //cout << "y[" << i << "]= ";
         cin >> y[i];
     }
     double start;
@@ -110,9 +109,24 @@ int main()
     sysout(a, y, n);
     x = gauss(a, y, n);
     end = omp_get_wtime();
-    cout << "Work took %f seconds\n" << end - start << endl;
+    cout << "Работа алгоритма в секундах: " << end - start << endl;
     for (int i = 0; i < n; i++)
         cout << "x[" << i << "]=" << x[i] << endl;
     cin.get(); cin.get();
     return 0;
 }
+/*
+3
+2
+4
+1
+5
+2
+1
+2
+3
+4
+36
+47
+37
+*/
