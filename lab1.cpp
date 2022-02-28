@@ -3,7 +3,7 @@
 using namespace std;
 
 int** multiplyMatrixOnOMP(int** a, int** b, int row1, int col1, int col2) {
-    // Умножение матриц
+    // Умножение матриц c OMP
     int** c;
     c = new int* [row1];
     double start;
@@ -25,7 +25,7 @@ int** multiplyMatrixOnOMP(int** a, int** b, int row1, int col1, int col2) {
     return c;
 }
 int** multiplyMatrixNotOMP(int** a, int** b, int row1, int col1, int col2) {
-    // Умножение матриц
+    // Умножение матриц без OMP
     int** c;
     c = new int* [row1];
     double start;
@@ -67,81 +67,23 @@ int main()
         a[i] = new int[col1];
         for (int j = 0; j < col1; j++)
         {
-            a[i][j] = 0 + rand()%1000;
+            a[i][j] = 0 + rand()%10;
         }
     }
-    /*
-    // Вывод элементов первой матрицы
-    cout << "Первая матрица:" << endl;
-    for (int i = 0; i < row1; i++)
-    {
-        for (int j = 0; j < col1; j++)
-            cout << a[i][j] << " ";
-        cout << endl;
-    }
-    */
-    cout << endl;
-    // Ввод элементов второй матрицы
-    
     b = new int* [row2];
     for (int i = 0; i < row2; i++)
     {
         b[i] = new int[col2];
         for (int j = 0; j < col2; j++)
         {
-            b[i][j] = 0 + rand() % 1000;
+            b[i][j] = 0 + rand() % 10;
         }
     }
-    /*
-    // Вывод элементов второй матрицы
-    cout << "Вторая матрица:" << endl;
-    for (int i = 0; i < row2; i++)
-    {
-        for (int j = 0; j < col2; j++)
-        {
-            cout << b[i][j] << " ";
-        }
-        cout << endl;
-    }
-    */
     cout << endl;
-
-    
-
-    c = multiplyMatrixOnOMP(a,b,row1,col1,col2);
-
-    
-    /*
-    // Вывод матрицы произведения
-    cout << "Матрица произведения" << endl;
-    for (int i = 0; i < row1; i++)
-    {
-        for (int j = 0; j < col2; j++)
-            cout << c[i][j] << " ";
-        cout << endl;
-    }
-    */
-    cout << endl;
-    
-    cout << endl;
-    /// <summary>
-    /// ///////////////////////////////////
-    /// </summary>
-    /// <returns></returns>
-
     c = multiplyMatrixNotOMP(a, b, row1, col1, col2);
-
-    /*
-    // Вывод матрицы произведения
-    cout << "Матрица произведения" << endl;
-    for (int i = 0; i < row1; i++)
-    {
-        for (int j = 0; j < col2; j++)
-            cout << c[i][j] << " ";
-        cout << endl;
-    }
-    */
-    
+    cout << endl;
+    c = multiplyMatrixOnOMP(a, b, row1, col1, col2);
+ 
     cout << endl;
     cin.get(); cin.get();
     return 0;
@@ -153,6 +95,12 @@ int main()
 
 1000 1000
 1000 1000
+
+1000 2000
+2000 1000
+
+2000 2000
+2000 2000
 
 5000 5000
 5000 5000
