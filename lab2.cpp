@@ -1,78 +1,81 @@
 #include <iostream>
 #include <stdlib.h>
 #include <omp.h>
+#include <queue>
 using namespace std;
 
-int** gen_random_graph(int n, bool* &visited, bool*& visitedOmp)
-{
-	int** adj_matrix;
-	adj_matrix = new int* [n];
-	for(int u = 0; u < n; u++)
-		adj_matrix[u] = new int[n];
+vector<vector<int>> AdjacencyMatrix;
 
-	for (int u = 0; u < n; u++)
-	{
-		visited[u] = false;
-		visitedOmp[u] = false;
-		//cout << visited[u] << endl;
-		for (int v = 0; v < n; v++)
-		{
-			adj_matrix[u][v] = 0 + rand() % 2;
-			//adj_matrix[v][u] = adj_matrix[u][v];
-			//cout << adj_matrix[u][v] << " ";
-		}
-		//cout << endl;
-	}
-	return adj_matrix;
+int n(0);
+
+void adjecencyMatrix(bool* visited)
+{
+    //Матрица смежности
+    AdjacencyMatrix.resize(n, vector<int>(n));
+
+    cout << "Матрица смежности: " << endl;
+    for (int f = 0; f < n; f++)
+    {
+        visited[f] = false;
+        for (int g = 0; g < n; g++)
+        {
+            AdjacencyMatrix[f][g] = 0 + rand() % 2;
+            cout << AdjacencyMatrix[f][g] << ' ';
+        }
+        cout << "\n";
+    }
 }
 
-//поиск в глубину
-void DFS(int** graph, int n, int st, bool* &visited)
+void DFS(int st, bool* visited)
 {
-		int r;
-		cout << st + 1 << " ";
-		visited[st] = true;
-		for (r = 0; r <= n; r++)
-			if ((graph[st][r] != 0) && (!visited[r]))
-				DFS(graph, n, r, visited);
+    int r;
+    cout << st + 1 << " ";
+    visited[st] = true;
+    for (r = 0; r < n; r++)
+    {
+        if ((AdjacencyMatrix[st][r] != 0) && (!visited[r]))
+        {
+            DFS(r, visited);
+        }
+    }
 }
-
-//поиск в глубину
-void DFSOmp(int** graph,int n, int st, bool* &visited)
-{
-	int r;
-	cout << st + 1 << " ";
-	visited[st] = true;
-	double start;
-	double end;
-	start = omp_get_wtime();
-#pragma omp parallel for
-	for (r = 0; r <= n; r++)
-		if ((graph[st][r] != 0) && (!visited[r]))
-			DFS(graph, n, r, visited);
+void BFS(int s) {
+    queue <int> turn;
+    vector<bool> used(n);
+    used[s] = true;
+    turn.push(s);
+    while (!turn.empty()) //проверяем, пуста ли очередь
+    {
+        int ind = turn.front();//берем из очереди крайний элемент
+        turn.pop();//удаляем его
+        cout << ind+1 << ' ';
+        for (int i = 0; i < AdjacencyMatrix[ind].size(); i++)//смотрим, с какими вершинами смежна вершина ind
+        {
+            if (AdjacencyMatrix[ind][i] == 1 && used[i] != true)
+            {
+                used[i] = true;
+                turn.push(i);//добавляем в очередь вершину i
+                
+            }
+        }
+    }
 }
 
 int main()
 {
-	int N;
-	int** graph;
+    setlocale(LC_ALL, "rus");
+    //Поиск в глубину
+    n = 5;
+    bool* visited = new bool[n];
+    bool* visited1 = visited;
+    adjecencyMatrix(visited);
+    int start;
+    start = 1;
 
-	cin >> N;
-	bool* visited = new bool[N];
-	bool* visitedOmp = new bool[N];
-
-	double start;
-	double end;
-	
-	
-	graph = gen_random_graph(N, visited, visitedOmp);
-	cout << endl;
-	start = omp_get_wtime();
-	DFSOmp(graph, N, 0, visitedOmp);
-	
-	end = omp_get_wtime();
-	cout <<endl<< "OMP: " << end - start;
-	cout << endl;
-	DFS(graph, N, 0, visited);
-	return 0;
+    cout << "Порядок обхода: ";
+    DFS(start - 1, visited);
+    cout << endl;
+    cout << "Порядок обхода: ";
+    BFS(start-1);
+    return 0;
 }
