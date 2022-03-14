@@ -29,7 +29,7 @@ void adjecencyMatrix(bool* visited)
 void DFS(int st, bool* visited)
 {
     int r;
-    cout << st + 1 << " ";
+    //cout << st + 1 << " ";
     visited[st] = true;
     for (r = 0; r < n; r++)
     {
@@ -41,11 +41,10 @@ void DFS(int st, bool* visited)
 }
 void DFSOmp(int st, bool* visited)
 {
-    int r;
-    cout << st + 1 << " ";
+    //cout << st + 1 << " ";
     visited[st] = true;
-#pragma omp parallel for
-    for (r = 0; r < n; r++)
+#pragma omp for
+    for (int r = 0; r < n; r++)
     {
         if ((AdjacencyMatrix[st][r] != 0) && (!visited[r]))
         {
@@ -101,7 +100,7 @@ int main()
 {
     setlocale(LC_ALL, "rus");
     //Поиск в глубину
-    n = 10000;
+    n = 3000;
     bool* visited = new bool[n];
     bool* visited1 = visited;
     adjecencyMatrix(visited);
@@ -111,16 +110,17 @@ int main()
     double end;
     startT = omp_get_wtime();
     //cout << "Порядок обхода: ";
-   // DFS(start - 1, visited);
+    DFS(start - 1, visited);
     //cout << endl;
     cout << "Порядок обхода: ";
-    BFS(start - 1);
+    //BFS(start - 1);
     end = omp_get_wtime();
     cout << "Время без OMP: " << end - startT;
     startT = omp_get_wtime();
     cout << endl;
     cout << "Порядок обхода: ";
-    BFSOmp(start - 1);
+    //BFSOmp(start - 1);
+    DFSOmp(start - 1, visited);
     end = omp_get_wtime();
     cout << "Время c OMP: " << end - startT;
     return 0;
