@@ -62,14 +62,14 @@ void BFS(int s) {
     {
         int ind = turn.front();//берем из очереди крайний элемент
         turn.pop();//удаляем его
-        cout << ind+1 << ' ';
+        //cout << ind + 1 << ' ';
         for (int i = 0; i < AdjacencyMatrix[ind].size(); i++)//смотрим, с какими вершинами смежна вершина ind
         {
             if (AdjacencyMatrix[ind][i] == 1 && used[i] != true)
             {
                 used[i] = true;
                 turn.push(i);//добавляем в очередь вершину i
-                
+
             }
         }
     }
@@ -79,11 +79,12 @@ void BFSOmp(int s) {
     vector<bool> used(n);
     used[s] = true;
     turn.push(s);
-#pragma omp parallel for
-    for (; !turn.empty();) {
+    while (!turn.empty()) //проверяем, пуста ли очередь
+    {
         int ind = turn.front();//берем из очереди крайний элемент
         turn.pop();//удаляем его
-        cout << ind + 1 << ' ';
+        //cout << ind + 1 << ' ';
+#pragma omp for
         for (int i = 0; i < AdjacencyMatrix[ind].size(); i++)//смотрим, с какими вершинами смежна вершина ind
         {
             if (AdjacencyMatrix[ind][i] == 1 && used[i] != true)
@@ -93,30 +94,34 @@ void BFSOmp(int s) {
 
             }
         }
+       
     }
-    //while (!turn.empty()) //проверяем, пуста ли очередь
-    //{
-        
-    //}
 }
 int main()
 {
     setlocale(LC_ALL, "rus");
     //Поиск в глубину
-    n = 1000;
+    n = 10000;
     bool* visited = new bool[n];
     bool* visited1 = visited;
     adjecencyMatrix(visited);
     int start;
     start = 1;
-
+    double startT;
+    double end;
+    startT = omp_get_wtime();
     //cout << "Порядок обхода: ";
    // DFS(start - 1, visited);
     //cout << endl;
     cout << "Порядок обхода: ";
-    BFS(start-1);
+    BFS(start - 1);
+    end = omp_get_wtime();
+    cout << "Время без OMP: " << end - startT;
+    startT = omp_get_wtime();
     cout << endl;
     cout << "Порядок обхода: ";
-    BFSOmp(start-1);
+    BFSOmp(start - 1);
+    end = omp_get_wtime();
+    cout << "Время c OMP: " << end - startT;
     return 0;
 }
